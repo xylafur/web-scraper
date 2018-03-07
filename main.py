@@ -7,9 +7,12 @@ if __name__ == '__main__':
         print("This program requires a single input, the url of the"
               " main site to scrape")
         exit(1)
+    if 'http://' not in sys.argv[1]:
+        print("The full url is required!")
+        print("Ex: http://website_name.extention/")
+        exit(1)
+
     base = sys.argv[1]
 
-    url_list = [base]
-
-    start_scrape(base, url_list)
+    start_scrape(base)
 
