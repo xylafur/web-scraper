@@ -43,19 +43,20 @@ def get_all_links(html):
 
 def filter_links(base_url, links, filter):
     """
-        Ensures that all of the links are a part of the original website
-        Also removes links that don't follow the filter
+        Ensures that all of the links are a part of the original 
+        website.  Also removes links that don't follow the filter
 
         Arguments:
-            base_url (:class:`str`): THe name of the site we're scraping
-                                     THe name of the direcctory we are saving
-                                     all of the sites in is what is expected
-                                     most likely
+            base_url (:class:`str`): THe name of the site we're 
+                                     scraping.  THe name of the 
+                                     direcctory we are saving all 
+                                     of the sites in is what is 
+                                     expected most likely
 
             links (:class:`list`): THe links we are filtering
 
-            filter (:class:`list`): A list of strings that should not be
-                                   in any of the links
+            filter (:class:`list`): A list of strings that should 
+                                    not be in any of the links
 
         Returns:    
             (:class:`list`): THe filtered link list
@@ -106,28 +107,38 @@ def create_html_file(url, html, directory_name):
         Puts the html gatered as a string into a file 
 
         Arguments:
-           url (:class:`str`):  The url of the page(what we will name the file)
+           url (:class:`str`):  The url of the page(what we will name 
+                                the file)
 
            html (:class:`str`): The html of the page
 
-           directory_name (:class:`str`): The name of the directory we are 
-                                          putting the file in
+           directory_name (:class:`str`): The name of the directory 
+                                          we are putting the file in
     """
-    os.system("echo {} > {}/{}.html".format(html, directory_name, url))
+    url = re.search(re.compile(r"([a-z.]+[a-z]+)/"), 
+                               url).groups()[0]
+    f = "{}/{}".format(directory_name, url) 
+    os.system("touch {}".format(f))
+    file = open(f, 'w')
+    file.write(html)
+    file.close()
 
 def scrape(url, visited_urls, directory_name, base_url):
     """
         Recursive function.
-        Grabs the html of the provided url and createes a file for it.  Grabs
-        all links on the page and filters them.  Calls the function on all valid
-        links that have not yet been visited.
+        Grabs the html of the provided url and createes a file for 
+        it.  Grabs all links on the page and filters them.  Calls the 
+        function on all valid links that have not yet been visited.
 
         Arguments:
-           url (:class:`str`):  The url of the page(what we will name the file)
+           url (:class:`str`):  The url of the page(what we will name 
+                                the file)
 
-           visited_urls (:class:`list`): All of the pages we have visited
+           visited_urls (:class:`list`): All of the pages we have 
+                                         visited
 
-           directory_name (:class:`str`): The name of the to put files 
+           directory_name (:class:`str`): The name of the to put 
+                                          files 
 
            base_url (:class:`str`): The website we are scraping
     """
@@ -144,14 +155,15 @@ def scrape(url, visited_urls, directory_name, base_url):
 
 def start_scrape(base_url):
     """
-        Scraping starting point.  Creates the directory that will hold our files
-        and then calls the recursive function
-
+        Scraping starting point.  Creates the directory that will 
+                                  hold our files and then calls the 
+                                  recursive function
         Arguments:
            base_url (:class:`str`): The website we are scraping
     """
     print("Scraping website: {}".format(base_url))
-    directory_name = re.search(re.compile(r"([a-z]+[\.[a-z]+]+)/"), 
+
+    directory_name = re.search(re.compile(r"([a-z.]+[a-z]+)/"), 
                                base_url).groups()[0]
     visited_urls = [base_url]
     print("Site will be located in {}".format(directory_name))

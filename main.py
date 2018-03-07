@@ -14,5 +14,8 @@ if __name__ == '__main__':
 
     base = sys.argv[1]
 
+    if base[-1] != '/':
+        base += '/'
+
     start_scrape(base)
 
