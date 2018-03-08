@@ -1,0 +1,22 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+base	main.py	/^    base = sys.argv[1]$/;"	v
+create_directory	scraper.py	/^def create_directory(directory_name):$/;"	f
+create_html_file	scraper.py	/^def create_html_file(url, html, directory_name):$/;"	f
+filter	scraper.py	/^filter = ['img', 'favicon', 'ico']$/;"	v
+filter_links	scraper.py	/^def filter_links(base_url, links, filter):$/;"	f
+get_all_links	scraper.py	/^def get_all_links(html):$/;"	f
+get_new_links	scraper.py	/^def get_new_links(links, visited):$/;"	f
+get_url_html	scraper.py	/^def get_url_html(url):$/;"	f
+os	scraper.py	/^import os$/;"	i
+re	scraper.py	/^import re$/;"	i
+request	scraper.py	/^import urllib.request$/;"	i
+scrape	scraper.py	/^def scrape(url, visited_urls, directory_name, base_url):$/;"	f
+start_scrape	main.py	/^from scraper import start_scrape$/;"	i
+start_scrape	scraper.py	/^def start_scrape(base_url):$/;"	f
+sys	main.py	/^import sys$/;"	i
+urllib	scraper.py	/^import urllib.request$/;"	i

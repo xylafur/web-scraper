@@ -2,7 +2,7 @@ import urllib.request
 import os
 import re
 
-filter = ['img', 'favicon', 'ico']
+filter = ['img', 'favicon', 'ico', 'javascript']
 
 def get_url_html(url):
     """
@@ -14,10 +14,19 @@ def get_url_html(url):
         Returns:
             (:class:`str`): The html of the url as a string
     """
+    if 'http://' not in url:
+        url = 'http://' + url
     print("grabbing html for {}".format(url))
-    fp = urllib.request.urlopen(url)
+    try:
+        fp = urllib.request.urlopen(url)
+    except (urllib.error.HTTPError, urllib.error.URLError):
+        return ""
     mybytes = fp.read()
-    mystr = mybytes.decode("utf8")
+    try:
+        mystr = mybytes.decode("utf8")
+    except UnicodeDecodeError:
+        fp.close()
+        return ""
     fp.close()
 
     return mystr
@@ -65,12 +74,21 @@ def filter_links(base_url, links, filter):
     for link in links:
         if base_url in link:
             valid = True
+        elif link[0] == '/':
+            if base_url[-1] == '/' or link[0] == '/':
+                link = base_url + link
+            else:
+                link = base_url + '/' + link
+            valid = True
+        if valid:
             for filt in filter:
                 if filt in link:
                     valid = False 
                     break
-            if valid:
-                ret_links.append(link)
+
+        if valid:
+            ret_links.append(link)
+ 
     return ret_links
 
 def get_new_links(links, visited):
@@ -115,13 +133,18 @@ def create_html_file(url, html, directory_name):
            directory_name (:class:`str`): The name of the directory 
                                           we are putting the file in
     """
-    url = re.search(re.compile(r"([a-z.]+[a-z]+)/"), 
+    if directory_name not in url:
+        print("Did not find {} in url {}".format(directory_name, url))
+        return
+    #this regex is wrong, its only grabbing the base  website
+    url = re.search(re.compile(r"/([a-z.]+[a-z]+)"), 
                                url).groups()[0]
     f = "{}/{}".format(directory_name, url) 
     os.system("touch {}".format(f))
     file = open(f, 'w')
     file.write(html)
     file.close()
+    print("created file {}".format(f))
 
 def scrape(url, visited_urls, directory_name, base_url):
     """
@@ -143,6 +166,10 @@ def scrape(url, visited_urls, directory_name, base_url):
            base_url (:class:`str`): The website we are scraping
     """
     html = get_url_html(url)
+    if not html:
+        print("Was not able to get file for {}".format(url))
+        return
+
     create_html_file(url, html, directory_name)
 
     links = get_all_links(html)
@@ -150,6 +177,9 @@ def scrape(url, visited_urls, directory_name, base_url):
 
     new_links = get_new_links(links, visited_urls)
     links += new_links
+
+    #have to identify that it is indeed a url
+
     for link in new_links:
         scrape(link, links, directory_name, base_url)
 
